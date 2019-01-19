@@ -1,4 +1,4 @@
-# Biotouch
+# TouchRecorder
 
 An Android application that facilitates the gathering of touchscreen data. The initial purpose of the application was to gather data and build a dataset to perform machine learning on it.
 
