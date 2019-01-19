@@ -13,7 +13,7 @@ import java.io.File;
 
 import it.uniroma1.touchrecorder.data.SessionData;
 import it.uniroma1.touchrecorder.data.ToastManager;
-import it.uniroma1.touchrecorder.data.WordData;
+import it.uniroma1.touchrecorder.data.ItemData;
 
 /**
  * Created by luca on 29/12/17.
@@ -37,7 +37,7 @@ public class DrawingActivity extends Activity {
         Bundle b = getIntent().getExtras();
         String session;
         int word_number = -1;
-        WordData wordData;
+        ItemData itemData;
         SessionData sessionData = null;
 
         if (b != null) {
@@ -50,17 +50,20 @@ public class DrawingActivity extends Activity {
             throw new RuntimeException("Extraction of bundle failed!");
         }
 
-        wordData = new WordData(sessionData, word_number);
-        drawingView.setWordData(wordData);
 
-        TextView handwriting = findViewById(R.id.handwriting_label);
-        handwriting.setText(String.valueOf(wordData.sessionData.handwriting));
+        if (sessionData.configuration == null)
+            throw new RuntimeException("Configuration is null!");
+
+
+        itemData = new ItemData(sessionData, word_number);
+        drawingView.setItemData(itemData);
 
         TextView counterView = findViewById(R.id.current_number_label);
-        counterView.setText(String.valueOf(wordData.wordNumber));
+        counterView.setText(String.valueOf(itemData.itemNumber));
 
         TextView totalNumberView = findViewById(R.id.total_number_label);
-        totalNumberView.setText(String.valueOf(wordData.sessionData.totalWordNumber - 1));
+        totalNumberView.setText(sessionData.configuration.items.size());
+//        todo: not working. The problem is in the line abover, resource not found.
     }
 
     public void setTimerTextView(String s) {
@@ -84,7 +87,7 @@ public class DrawingActivity extends Activity {
         final Save s = Save.getInstance();
 
         DrawingView drawView = (DrawingView) findViewById(R.id.drawing_view_id);
-        final WordData data = drawView.getWordData();
+        final ItemData data = drawView.getItemData();
 
         if (data.touchUpPoints.isEmpty()) {
             ToastManager.getInstance().toastNoWord(this);
@@ -95,7 +98,7 @@ public class DrawingActivity extends Activity {
         ToastManager.getInstance().resetNoWord();
 
 
-        s.takeScreenshot(this, s.sessionDirectory(data.sessionData), s.getScreenshotName(data));
+        s.takeScreenshot(this, s.sessionDirectory(data.sessionData, data.itemNumber), s.getScreenshotName(data));
 
         thread = new Thread() {
             @Override
@@ -107,7 +110,7 @@ public class DrawingActivity extends Activity {
         };
         thread.start();
 
-        if (data.wordNumber + 1 >= data.sessionData.totalWordNumber) {
+        if (data.itemNumber + 1 >= data.sessionData.configuration.items.size()) {
             Toast.makeText(this, "Session completed! Thank you!", Toast.LENGTH_SHORT).show();
             finish();
             return;
@@ -120,7 +123,7 @@ public class DrawingActivity extends Activity {
         Intent intent = new Intent(this, DrawingActivity.class);
         Bundle b = new Bundle();
         b.putString(SESSION_KEY, sessionData);
-        b.putInt(WORD_NUMBER_KEY, data.wordNumber + 1); //Your id
+        b.putInt(WORD_NUMBER_KEY, data.itemNumber + 1); //Your id
 
         intent.putExtras(b); //Put your id to your next Intent
         startActivity(intent);
@@ -131,7 +134,6 @@ public class DrawingActivity extends Activity {
         DrawingView drawView = (DrawingView) findViewById(R.id.drawing_view_id);
         drawView.drawExtractSampling(drawView.extractSampling());
     }
-
 
     @Override
     protected void onDestroy() {

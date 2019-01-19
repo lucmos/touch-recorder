@@ -1,5 +1,6 @@
 package it.uniroma1.touchrecorder;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,11 +17,12 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 import it.uniroma1.touchrecorder.data.SessionData;
-import it.uniroma1.touchrecorder.data.WordData;
+import it.uniroma1.touchrecorder.data.ItemData;
 
 /**
  * Created by luca on 29/12/17.
@@ -39,14 +41,14 @@ public class Save {
     }
 
 
-    public File saveWordData(final WordData wordData) {
-        File p = sessionDirectory( wordData.sessionData);
-        final String name = getJsonName(wordData);
+    public File saveWordData(final ItemData itemData) {
+        File p = sessionDirectory( itemData.sessionData, itemData.itemNumber);
+        final String name = getJsonName(itemData);
         final File path = new File(p, name);
 
         try (Writer writer = new BufferedWriter(new FileWriter(path))) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            gson.toJson(wordData, writer);
+            gson.toJson(itemData, writer);
             writer.flush();
             writer.close();
 
@@ -57,17 +59,17 @@ public class Save {
     }
 
 
-    public String getJsonName(WordData data) {
+    public String getJsonName(ItemData data) {
         return getFileName(data, "json");
     }
 
-    public String getScreenshotName(WordData data) {
+    public String getScreenshotName(ItemData data) {
         return getFileName(data, "png");
     }
 
-    public String getFileName(WordData data, String extesion) {
-        return String.format(Locale.getDefault(), "%s.%s.%s.%s.%s",
-                data.sessionData.name, data.sessionData.surname, data.sessionData.handwriting, data.wordNumber, extesion);
+    public String getFileName(ItemData data, String extesion) {
+        return String.format(Locale.getDefault(), "%s.%s.%s.%s",
+                data.sessionData.name, data.sessionData.surname, data.itemNumber, extesion);
     }
 
     public File baseDirectory() {
@@ -79,17 +81,19 @@ public class Save {
         return baseDirectory;
     }
 
-    public File sessionDirectory(SessionData data)
+    public String normalize(String s){
+        return  s.replaceAll("\\s+", "_").toLowerCase();
+    }
+
+    public File sessionDirectory(SessionData data, int item_index)
     {
         File base = baseDirectory();
 
-        String nameFolder = data.name + SEPARATOR + data.surname;
-        String idFolder = data.id + "";
-        String modeFolder = data.handwriting.toString();
-
-        File sessionDirectory = new File(new File(new File(base, nameFolder), idFolder), modeFolder);
-
+        String firstFolder =  normalize(data.name) + SEPARATOR + normalize(data.surname)+SEPARATOR+getShortDate();
+        String secondFolder = data.configuration.items.get(item_index) + item_index;
+        File sessionDirectory = new File(new File(base, firstFolder), secondFolder);
         sessionDirectory.mkdirs();
+
         return sessionDirectory;
     }
 
@@ -111,10 +115,15 @@ public class Save {
 //        scanFile(activity, path.toString());
 //    }
 
-    public String getDate() {
+    public static String getDate() {
         Date now = new Date();
         android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
         return now.toString();
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public static String getShortDate() {
+        return  new SimpleDateFormat("yyyyMMddHHmm'.txt'").format(new Date());
     }
 
     public void takeScreenshot(Activity activity, File basepath, String name) {

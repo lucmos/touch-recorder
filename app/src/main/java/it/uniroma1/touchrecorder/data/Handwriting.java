@@ -4,6 +4,7 @@ package it.uniroma1.touchrecorder.data;
  * Created by luca on 29/12/17.
  */
 
+@Deprecated
 public enum Handwriting {
     ITALIC("ITALIC"), BLOCK_LETTERS("BLOCK LETTERS");
 

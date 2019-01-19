@@ -11,22 +11,22 @@ import it.uniroma1.touchrecorder.Save;
  * Created by luca on 29/12/17.
  */
 
-public class WordData {
+public class ItemData {
 
 
     public final String date;
     public SessionData sessionData;
 
-    public int wordNumber;
+    public int itemNumber;
 
     public List<TimedComponentFloatPoint> touchDownPoints = new ArrayList<>();
     public List<TimedComponentFloatPoint> touchUpPoints = new ArrayList<>();
     public List<TimedComponentFloatPoint> movementPoints = new ArrayList<>();
     public ArrayList<List<FloatPoint>> sampledPoints;
 
-    public WordData(SessionData sessionData, int wordNumber) {
+    public ItemData(SessionData sessionData, int itemNumber) {
         this.sessionData = sessionData;
-        this.wordNumber = wordNumber;
+        this.itemNumber = itemNumber;
         this.date = Save.getInstance().getDate();
     }
 
@@ -46,8 +46,8 @@ public class WordData {
         sampledPoints = new ArrayList<>(points);
     }
 
-    public WordData getNextWordData() {
-        return new WordData(sessionData, wordNumber + 1);
+    public ItemData getNextWordData() {
+        return new ItemData(sessionData, itemNumber + 1);
     }
 
     @Override

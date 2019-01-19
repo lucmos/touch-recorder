@@ -20,7 +20,7 @@ import it.uniroma1.touchrecorder.data.DeviceData;
 import it.uniroma1.touchrecorder.data.FloatPoint;
 import it.uniroma1.touchrecorder.data.SessionData;
 import it.uniroma1.touchrecorder.data.TimedComponentFloatPoint;
-import it.uniroma1.touchrecorder.data.WordData;
+import it.uniroma1.touchrecorder.data.ItemData;
 
 /**
  * Created by luca on 29/12/17.
@@ -32,7 +32,7 @@ public class DrawingView extends View {
     public static final float SAMPLING_RATE = 5;
     private int component_count;
 
-    private WordData wordData;
+    private ItemData itemData;
     private SessionData sessionData;
     private DeviceData deviceData;
 
@@ -295,28 +295,28 @@ public class DrawingView extends View {
 
 
     private void saveDownEvent(long time, int component, float x, float y) {
-        wordData.addTouchDownPoint(new TimedComponentFloatPoint(time, component, x, y));
+        itemData.addTouchDownPoint(new TimedComponentFloatPoint(time, component, x, y));
 
         touchDownCirclePath.addCircle(x, y, RADIUS_UP_DOWN, CIRCLE_DIRECTION);
         setTimerText(time + "");
     }
 
     private void saveUpEvent(long time,int component, float x, float y) {
-        wordData.addTouchUpPoint(new TimedComponentFloatPoint(time, component, x, y));
+        itemData.addTouchUpPoint(new TimedComponentFloatPoint(time, component, x, y));
 
         touchUpCirclePath.addCircle(mX, mY, RADIUS_UP_DOWN, CIRCLE_DIRECTION);
         setTimerText(time + "");
     }
 
     private void saveMoveEvent(long time,int component, float x, float y) {
-        wordData.addMovementPoint(new TimedComponentFloatPoint(time, component, x, y));
+        itemData.addMovementPoint(new TimedComponentFloatPoint(time, component, x, y));
 
         touchMoveCirclePath.addCircle(x, y, RADIUS_MOVE, CIRCLE_DIRECTION);
         setTimerText(time + "");
     }
 
     private void sampleFuctionLine() {
-        wordData.setSampledPoints(extractSampling());
+        itemData.setSampledPoints(extractSampling());
     }
 
 
@@ -366,7 +366,7 @@ public class DrawingView extends View {
 
 
     public void restart() {
-        wordData = new WordData(sessionData, wordData.wordNumber);
+        itemData = new ItemData(sessionData, itemData.itemNumber);
         component_count = 0;
 
         setTimerText(getResources().getString(R.string.time));
@@ -421,14 +421,14 @@ public class DrawingView extends View {
     }
 
 
-    public WordData getWordData() {
+    public ItemData getItemData() {
         sampleFuctionLine();
 
-        return wordData;
+        return itemData;
     }
 
-    public void setWordData(WordData data) {
-        wordData = data;
+    public void setItemData(ItemData data) {
+        itemData = data;
         sessionData = data.sessionData;
         deviceData = sessionData.deviceData;
     }
