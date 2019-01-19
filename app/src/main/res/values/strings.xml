@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="app_name">TouchRecorder</string>
+
+    <!--Word to write-->
+    <string name="word_to_write">TEMP</string>
+
+    <!--Autentication-->
+    <string name="start_button">Start recording!</string>
+    <string name="string_separetor">:</string>
+    <string name="male_label">Male</string>
+    <string name="female_label">Female</string>
+    <string name="italic_label">Italic</string>
+    <string name="block_letters_label">Block Letters</string>
+    <string name="default_id">0</string>
+    <string name="default_word_number">32</string>
+
+    <string-array name="gender_spinner">
+        <item>@string/male_label</item>
+        <item>@string/female_label</item>
+    </string-array>
+
+    <string-array name="modality_spinner">
+        <item>@string/italic_label</item>
+        <item>@string/block_letters_label</item>
+    </string-array>
+
+    <!--Drawing-->
+    <string name="clear_button">Clear</string>
+    <string name="next_button">Next</string>
+
+    <string name="write_in_label">Write in\u0020</string>
+    <string name="name_label">Name</string>
+    <string name="surname_label">Surname</string>
+    <string name="your_name_hint">Your name</string>
+    <string name="your_surname_hint">Your surname</string>
+    <string name="your_age_hint">Your age</string>
+    <string name="age_label">Age</string>
+    <string name="gender_label">Gender</string>
+    <string name="settings_label">Settings…</string>
+    <string name="number_separator">/</string>
+
+
+    <!--Place holders-->
+    <string name="time">Touch time</string>
+    <string name="not_present">-</string>
+
+</resources>
