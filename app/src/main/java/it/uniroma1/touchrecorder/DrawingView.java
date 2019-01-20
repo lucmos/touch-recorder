@@ -402,10 +402,12 @@ public class DrawingView extends View {
         privateCanvas.drawLine(startX, startY, startX +getWidth(), startY, borderLines);
         privateCanvas.drawLine(startX, startY + getHeight(), startX + getWidth(), startY + getHeight(), borderLines);
 
-        privateCanvas.drawLine(startX, startY+ (getHeight()* LOW_BAR_PERC_POS), startX + getWidth(), startY + (getHeight()* LOW_BAR_PERC_POS), guideLines);
-        privateCanvas.drawLine(startX,startY +  (getHeight()* HIGH_BAR_PERC_POS), startX +  getWidth(), startY +  (getHeight()* HIGH_BAR_PERC_POS), guideLines);
-        privateCanvas.drawLine(startX + getWidth()* VERTICAL_BAR_PERC_POS, startY, startX +  getWidth()* VERTICAL_BAR_PERC_POS, startY + getHeight(), guideLines);
-        privateCanvas.drawLine(startX + getWidth()*(1- VERTICAL_BAR_PERC_POS), startY, startX+ getWidth()*(1- VERTICAL_BAR_PERC_POS), startY+ getHeight(), guideLines);
+        if (sessionData.configuration.guide_lines) {
+            privateCanvas.drawLine(startX, startY+ (getHeight()* LOW_BAR_PERC_POS), startX + getWidth(), startY + (getHeight()* LOW_BAR_PERC_POS), guideLines);
+            privateCanvas.drawLine(startX,startY +  (getHeight()* HIGH_BAR_PERC_POS), startX +  getWidth(), startY +  (getHeight()* HIGH_BAR_PERC_POS), guideLines);
+            privateCanvas.drawLine(startX + getWidth()* VERTICAL_BAR_PERC_POS, startY, startX +  getWidth()* VERTICAL_BAR_PERC_POS, startY + getHeight(), guideLines);
+            privateCanvas.drawLine(startX + getWidth()*(1- VERTICAL_BAR_PERC_POS), startY, startX+ getWidth()*(1- VERTICAL_BAR_PERC_POS), startY+ getHeight(), guideLines);
+        }
 
         invalidate();
     }

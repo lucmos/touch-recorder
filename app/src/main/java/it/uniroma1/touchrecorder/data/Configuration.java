@@ -7,4 +7,5 @@ public class Configuration {
     public ArrayList<String> items;
     public int repetitions;
     public String repetitions_label;
+    public boolean guide_lines;
 }
