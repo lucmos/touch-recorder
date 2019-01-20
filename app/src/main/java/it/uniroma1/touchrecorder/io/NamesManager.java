@@ -57,8 +57,11 @@ public class NamesManager {
     }
 
     public static String getFileName(ItemData data, String extesion) {
-        return String.format(Locale.getDefault(), "%s.%s.%s.%s",
-                data.sessionData.name, data.sessionData.surname, data.item_index, extesion);
+        return String.format(Locale.getDefault(), "%s%s%s%s%s%s%s.%s",
+                DataProvider.getInstance().getItemsProvider().get(data.item_index), SEPARATOR,
+                data.sessionData.name, SEPARATOR,
+                data.sessionData.surname, SEPARATOR,
+                data.item_index, extesion);
     }
 
     public static File baseDirectory() {
@@ -72,15 +75,16 @@ public class NamesManager {
     }
 
     public static String normalize(String s){
-        return  s.replaceAll("\\s+", "_").toLowerCase();
+        return  s.replaceAll("\\s+", ".").toLowerCase();
     }
 
     public static File sessionDirectory(SessionData data, int item_index, String timestamp)
     {
         File base = baseDirectory();
 
-        String firstFolder =  normalize(data.name) + SEPARATOR + normalize(data.surname) + SEPARATOR + timestamp;
-        String secondFolder = DataProvider.getInstance().getItemsProvider().get(item_index);
+        String firstFolder = DataProvider.getInstance().getItemsProvider().get(item_index);
+        String secondFolder = normalize(data.name) + SEPARATOR +
+                normalize(data.surname) + SEPARATOR + timestamp;
         File sessionDirectory = new File(new File(base, firstFolder), secondFolder);
         sessionDirectory.mkdirs();
 
@@ -99,6 +103,6 @@ public class NamesManager {
 
     @SuppressLint("SimpleDateFormat")
     public static String getShortDate() {
-        return  new SimpleDateFormat("dd.MM.yyyy_HH.mm").format(new Date());
+        return  new SimpleDateFormat("dd.MM.yyyy.HH.mm").format(new Date());
     }
 }
