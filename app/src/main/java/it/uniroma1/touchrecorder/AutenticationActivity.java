@@ -96,11 +96,11 @@ public class AutenticationActivity extends Activity {
         try {
             number_of_items = Integer.parseInt(wordsText.getText().toString());
         } catch (Exception e) {
-            Toast.makeText(this, "The words field must be a number!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "The item repetition field must be a number!", Toast.LENGTH_SHORT).show();
             return;
         }
         if (number_of_items < 1) {
-            Toast.makeText(this, "Please insert a number in the words field!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please insert a number in the item repetition field!", Toast.LENGTH_SHORT).show();
             return;
         }
 

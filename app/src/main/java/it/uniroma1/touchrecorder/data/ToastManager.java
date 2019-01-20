@@ -23,13 +23,13 @@ public class ToastManager {
 
     public void toastNoWord(Activity activity) {
         resetNoWord();
-        no_word = Toast.makeText(activity, "Write a word before!", Toast.LENGTH_SHORT);
+        no_word = Toast.makeText(activity, "Write something before!", Toast.LENGTH_SHORT);
         no_word.show();
     }
 
     public void toastSavedWord(Activity activity) {
         resetSaveWord();
-        next_word = Toast.makeText(activity, "Word saved!", Toast.LENGTH_SHORT);
+        next_word = Toast.makeText(activity, "Item saved!", Toast.LENGTH_SHORT);
         next_word.show();
     }
 
