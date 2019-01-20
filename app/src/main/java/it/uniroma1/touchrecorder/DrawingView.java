@@ -21,6 +21,7 @@ import it.uniroma1.touchrecorder.data.FloatPoint;
 import it.uniroma1.touchrecorder.data.SessionData;
 import it.uniroma1.touchrecorder.data.TimedComponentFloatPoint;
 import it.uniroma1.touchrecorder.data.ItemData;
+import it.uniroma1.touchrecorder.util.Chronometer;
 
 /**
  * Created by luca on 29/12/17.
@@ -366,7 +367,7 @@ public class DrawingView extends View {
 
 
     public void restart() {
-        itemData = new ItemData(sessionData, itemData.itemNumber);
+        itemData = new ItemData(sessionData, itemData.item_index);
         component_count = 0;
 
         setTimerText(getResources().getString(R.string.time));

@@ -1,4 +1,4 @@
-package it.uniroma1.touchrecorder;
+package it.uniroma1.touchrecorder.io;
 
 import java.io.*;
 

@@ -11,9 +11,12 @@ import com.google.gson.Gson;
 
 import java.io.File;
 
+import it.uniroma1.touchrecorder.data.DataProvider;
 import it.uniroma1.touchrecorder.data.SessionData;
 import it.uniroma1.touchrecorder.data.ToastManager;
 import it.uniroma1.touchrecorder.data.ItemData;
+import it.uniroma1.touchrecorder.io.NamesManager;
+import it.uniroma1.touchrecorder.io.Saver;
 
 /**
  * Created by luca on 29/12/17.
@@ -22,7 +25,10 @@ import it.uniroma1.touchrecorder.data.ItemData;
 public class DrawingActivity extends Activity {
 
     public static final String SESSION_KEY = "session_data_key";
-    public static final String WORD_NUMBER_KEY = "word_number_key";
+    public static final String ITEM_NUMBER_KEY = "word_number_key";
+    public static final String TIMESTAMP_KEY = "timestamp_key";
+
+    private String timestamp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +42,18 @@ public class DrawingActivity extends Activity {
 
         Bundle b = getIntent().getExtras();
         String session;
-        int word_number = -1;
         ItemData itemData;
         SessionData sessionData = null;
 
+        int item_index = -1;
         if (b != null) {
             session = b.getString(SESSION_KEY);
-            word_number = b.getInt(WORD_NUMBER_KEY);
+            item_index = b.getInt(ITEM_NUMBER_KEY);
+            timestamp = b.getString(TIMESTAMP_KEY);
             sessionData = new Gson().fromJson(session, SessionData.class);
         }
 
-        if (b == null || sessionData == null || word_number == -1) {
+        if (b == null || sessionData == null || item_index == -1) {
             throw new RuntimeException("Extraction of bundle failed!");
         }
 
@@ -54,16 +61,21 @@ public class DrawingActivity extends Activity {
         if (sessionData.configuration == null)
             throw new RuntimeException("Configuration is null!");
 
-
-        itemData = new ItemData(sessionData, word_number);
+        itemData = new ItemData(sessionData, item_index);
         drawingView.setItemData(itemData);
 
         TextView counterView = findViewById(R.id.current_number_label);
-        counterView.setText(String.valueOf(itemData.itemNumber));
+        counterView.setText(String.valueOf(item_index + 1));
 
         TextView totalNumberView = findViewById(R.id.total_number_label);
-        totalNumberView.setText(sessionData.configuration.items.size());
-//        todo: not working. The problem is in the line abover, resource not found.
+        totalNumberView.setText(String.valueOf(DataProvider.getInstance()
+                .getItemsProvider().getNumberOfItems()));
+
+        TextView title = findViewById(R.id.title_label);
+        title.setText(DataProvider.getInstance().getTitle());
+
+        TextView itemText = findViewById(R.id.item_text);
+        itemText.setText(DataProvider.getInstance().getItemsProvider().get(item_index));
     }
 
     public void setTimerTextView(String s) {
@@ -84,8 +96,6 @@ public class DrawingActivity extends Activity {
     public synchronized void next(View view) {
         view.setEnabled(false);
 
-        final Save s = Save.getInstance();
-
         DrawingView drawView = (DrawingView) findViewById(R.id.drawing_view_id);
         final ItemData data = drawView.getItemData();
 
@@ -98,24 +108,25 @@ public class DrawingActivity extends Activity {
         ToastManager.getInstance().resetNoWord();
 
 
-        s.takeScreenshot(this, s.sessionDirectory(data.sessionData, data.itemNumber), s.getScreenshotName(data));
+        Saver.takeScreenshot(this, NamesManager.sessionDirectory(data.sessionData, data.item_index, timestamp), NamesManager.getScreenshotName(data));
 
         thread = new Thread() {
             @Override
             public void run() {
                 synchronized (DrawingActivity.this) {
-                    path_file = s.saveWordData(data);
+                    path_file = Saver.saveItemData(data, timestamp);
                 }
             }
         };
         thread.start();
 
-        if (data.itemNumber + 1 >= data.sessionData.configuration.items.size()) {
+        int next_index = DataProvider.getInstance().getItemsProvider().nextIndex(data.item_index);
+        int total_number_items = DataProvider.getInstance().getItemsProvider().getNumberOfItems();
+        if (next_index >= total_number_items) {
             Toast.makeText(this, "Session completed! Thank you!", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
-
 
         ToastManager.getInstance().toastSavedWord(this);
 
@@ -123,7 +134,8 @@ public class DrawingActivity extends Activity {
         Intent intent = new Intent(this, DrawingActivity.class);
         Bundle b = new Bundle();
         b.putString(SESSION_KEY, sessionData);
-        b.putInt(WORD_NUMBER_KEY, data.itemNumber + 1); //Your id
+        b.putInt(ITEM_NUMBER_KEY, next_index); //Your id
+        b.putString(TIMESTAMP_KEY, timestamp);
 
         intent.putExtras(b); //Put your id to your next Intent
         startActivity(intent);
@@ -140,7 +152,7 @@ public class DrawingActivity extends Activity {
         if (thread != null) {
             try {
                 thread.join();
-                Save.getInstance().scanFile(this, path_file);
+                NamesManager.getInstance().scanFile(this, path_file);
                 ToastManager.getInstance().resetSaveWord();
             } catch (InterruptedException e) {
                 e.printStackTrace();

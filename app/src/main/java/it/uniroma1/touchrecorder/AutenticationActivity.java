@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.EditText;
@@ -16,9 +17,12 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import it.uniroma1.touchrecorder.data.Configuration;
+import it.uniroma1.touchrecorder.data.DataProvider;
 import it.uniroma1.touchrecorder.data.DeviceData;
 import it.uniroma1.touchrecorder.data.Gender;
 import it.uniroma1.touchrecorder.data.SessionData;
+import it.uniroma1.touchrecorder.io.ConfigurationReader;
+import it.uniroma1.touchrecorder.io.NamesManager;
 
 public class AutenticationActivity extends Activity {
 
@@ -31,42 +35,30 @@ public class AutenticationActivity extends Activity {
         ActivityCompat.requestPermissions(AutenticationActivity.this,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 1);
-
-        JSONResourceReader reader = new JSONResourceReader(getResources(), R.raw.configuration);
-        configurationJson = reader.constructUsingGson(Configuration.class);
-
-        TextView repetitionsTextView = findViewById(R.id.items_repetition_text);
-        repetitionsTextView.setText(String.valueOf(configurationJson.repetitions));
-
-        TextView repetitionsLabelView = findViewById(R.id.item_label);
-        repetitionsLabelView.setText(String.valueOf(configurationJson.repetitions_label));
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case 1: {
-
-                // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    configurationJson = ConfigurationReader.readConfiguration(getResources());
+                    DataProvider.createInstance(configurationJson);
 
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                    TextView repetitionsTextView = findViewById(R.id.items_repetition_text);
+                    repetitionsTextView.setText(String.valueOf(configurationJson.repetitions));
+
+                    TextView repetitionsLabelView = findViewById(R.id.repetitions_label);
+                    repetitionsLabelView.setText(String.valueOf(configurationJson.repetitions_label));
                 } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
                     ActivityCompat.requestPermissions(AutenticationActivity.this,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             1);
                 }
-                return;
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 
@@ -99,66 +91,44 @@ public class AutenticationActivity extends Activity {
             return;
         }
 
-//        EditText idText = findViewById(R.id.id_text);
-//        int id;
-//        try {
-//            id = Integer.parseInt(idText.getText().toString());
-//        } catch (Exception e) {
-//            Toast.makeText(this, "Id must be a number!", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-
-//        if (id < 0 || id > 100) {
-//            Toast.makeText(this, "Please insert a valid id!", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-
         EditText wordsText = findViewById(R.id.items_repetition_text);
-        int number_of_words;
+        int number_of_items;
         try {
-            number_of_words = Integer.parseInt(wordsText.getText().toString());
+            number_of_items = Integer.parseInt(wordsText.getText().toString());
         } catch (Exception e) {
             Toast.makeText(this, "The words field must be a number!", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (number_of_words < 1) {
+        if (number_of_items < 1) {
             Toast.makeText(this, "Please insert a number in the words field!", Toast.LENGTH_SHORT).show();
             return;
         }
 
+//        If changed update configuration
+        if (number_of_items != configurationJson.repetitions) {
+            configurationJson.repetitions = number_of_items;
+            ConfigurationReader.saveUserConfiguration(configurationJson);
+        }
+
         Spinner genderSpinner = findViewById(R.id.gender_spinner);
         Gender gender = Gender.toEnum(genderSpinner.getSelectedItem().toString().toUpperCase());
-
-//        Spinner handwritingSpinner = findViewById(R.id.handwriting_spinner);
-//        Handwriting handwriting = Handwriting.toEnum(handwritingSpinner.getSelectedItem().toString().toUpperCase());
-
-//        System.out.println();
-//        System.out.println();
-//        System.out.println(name);
-//        System.out.println(surname);
-//        System.out.println(age);
-//        System.out.println(gender);
-//        System.out.println(id);
-//        System.out.println(number_of_words);
-//        System.out.println(handwriting);
-//        System.out.println();
-//        System.out.println();
 
         DeviceData deviceData = new DeviceData(Build.MODEL, Build.FINGERPRINT,
             getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels,
             getResources().getDisplayMetrics().xdpi, getResources().getDisplayMetrics().ydpi);
 
         SessionData sessionData = new SessionData(configurationJson, deviceData,
-                number_of_words, name, surname, age, gender, Save.getShortDate());
+                name, surname, age, gender, NamesManager.getShortDate());
         String sessionData_string = new Gson().toJson(sessionData);
 
         Intent intent = new Intent(this, DrawingActivity.class);
+
         Bundle b = new Bundle();
-
         b.putString(DrawingActivity.SESSION_KEY, sessionData_string);
-        b.putInt(DrawingActivity.WORD_NUMBER_KEY, 0); // Your id
-
+        b.putInt(DrawingActivity.ITEM_NUMBER_KEY, 0);
+        b.putString(DrawingActivity.TIMESTAMP_KEY, sessionData.date);
         intent.putExtras(b); // Put your id to your next Intent
+
         startActivity(intent);
     }
 }

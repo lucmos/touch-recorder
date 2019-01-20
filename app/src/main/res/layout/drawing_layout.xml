@@ -16,7 +16,7 @@
         app:layout_constraintBottom_toTopOf="@+id/button2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/item_text" />
 
     <Button
         android:id="@+id/button2"
@@ -30,7 +30,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/item_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -52,16 +52,6 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
-        android:id="@+id/handwriting_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/not_present"
-        android:textAllCaps="true"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/textView11"
-        app:layout_constraintTop_toTopOf="@+id/textView11" />
-
-    <TextView
         android:id="@+id/total_number_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -80,21 +70,13 @@
         app:layout_constraintEnd_toStartOf="@+id/textView12" />
 
     <TextView
-        android:id="@+id/textView10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/write_in_label"
-        app:layout_constraintEnd_toStartOf="@+id/handwriting_label"
-        app:layout_constraintTop_toTopOf="@+id/handwriting_label" />
-
-    <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/title_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="@string/string_separetor"
-        app:layout_constraintEnd_toStartOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="@+id/textView" />
+        android:text="@string/write_in_label"
+        app:layout_constraintBaseline_toBaselineOf="@+id/item_text"
+        app:layout_constraintEnd_toStartOf="@+id/item_text" />
 
     <TextView
         android:id="@+id/timer"

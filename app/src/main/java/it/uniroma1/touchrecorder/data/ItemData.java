@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.uniroma1.touchrecorder.Save;
+import it.uniroma1.touchrecorder.io.NamesManager;
 
 /**
  * Created by luca on 29/12/17.
@@ -17,17 +17,17 @@ public class ItemData {
     public final String date;
     public SessionData sessionData;
 
-    public int itemNumber;
+    public int item_index;
 
     public List<TimedComponentFloatPoint> touchDownPoints = new ArrayList<>();
     public List<TimedComponentFloatPoint> touchUpPoints = new ArrayList<>();
     public List<TimedComponentFloatPoint> movementPoints = new ArrayList<>();
     public ArrayList<List<FloatPoint>> sampledPoints;
 
-    public ItemData(SessionData sessionData, int itemNumber) {
+    public ItemData(SessionData sessionData, int item_index) {
         this.sessionData = sessionData;
-        this.itemNumber = itemNumber;
-        this.date = Save.getInstance().getDate();
+        this.item_index = item_index;
+        this.date = NamesManager.getDate();
     }
 
     public void addTouchDownPoint(TimedComponentFloatPoint point) {
@@ -47,7 +47,7 @@ public class ItemData {
     }
 
     public ItemData getNextWordData() {
-        return new ItemData(sessionData, itemNumber + 1);
+        return new ItemData(sessionData, item_index + 1);
     }
 
     @Override

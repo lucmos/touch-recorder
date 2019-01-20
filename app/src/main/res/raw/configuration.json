@@ -1,6 +1,6 @@
 {
   "title":"Disegna un/una ",
-  "items":["quadrato", "triangolo"],
-  "repetitions": "1",
+  "items":["quadrato", "triangolo", "Testing"],
+  "repetitions": "2",
   "repetitions_label": "Repetitions"
 }
