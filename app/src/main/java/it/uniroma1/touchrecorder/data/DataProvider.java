@@ -2,6 +2,8 @@ package it.uniroma1.touchrecorder.data;
 
 import java.util.ArrayList;
 
+import it.uniroma1.touchrecorder.io.NamesManager;
+
 public class DataProvider  {
     private  Configuration configuration;
     private ItemsProvider itemsProvider;
@@ -48,7 +50,7 @@ public class DataProvider  {
         }
 
         public String get(int current_index) {
-            return configuration.items.get(current_index % configuration.items.size());
+            return NamesManager.normalize(configuration.items.get(current_index % configuration.items.size()));
         }
 
         public boolean hasNext(int index) {
