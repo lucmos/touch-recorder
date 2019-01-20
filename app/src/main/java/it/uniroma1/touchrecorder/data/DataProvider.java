@@ -50,6 +50,10 @@ public class DataProvider  {
         }
 
         public String get(int current_index) {
+            return configuration.items.get(current_index % configuration.items.size());
+        }
+
+        public String getNormalized(int current_index) {
             return NamesManager.normalize(configuration.items.get(current_index % configuration.items.size()));
         }
 

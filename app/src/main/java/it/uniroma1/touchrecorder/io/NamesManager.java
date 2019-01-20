@@ -3,21 +3,10 @@ package it.uniroma1.touchrecorder.io;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
-import android.view.View;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -58,7 +47,7 @@ public class NamesManager {
 
     public static String getFileName(ItemData data, String extesion) {
         return String.format(Locale.getDefault(), "%s%s%s%s%s%s%s.%s",
-                DataProvider.getInstance().getItemsProvider().get(data.item_index), SEPARATOR,
+                DataProvider.getInstance().getItemsProvider().getNormalized(data.item_index), SEPARATOR,
                 data.sessionData.name, SEPARATOR,
                 data.sessionData.surname, SEPARATOR,
                 data.item_index, extesion);
@@ -82,7 +71,7 @@ public class NamesManager {
     {
         File base = baseDirectory();
 
-        String firstFolder = DataProvider.getInstance().getItemsProvider().get(item_index);
+        String firstFolder = DataProvider.getInstance().getItemsProvider().getNormalized(item_index);
         String secondFolder = normalize(data.name) + SEPARATOR +
                 normalize(data.surname) + SEPARATOR + timestamp;
         File sessionDirectory = new File(new File(base, firstFolder), secondFolder);
