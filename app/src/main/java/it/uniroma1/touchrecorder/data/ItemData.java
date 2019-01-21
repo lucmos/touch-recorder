@@ -18,6 +18,7 @@ public class ItemData {
     public SessionData sessionData;
 
     public int item_index;
+    public String item;
 
     public List<TimedComponentFloatPoint> touchDownPoints = new ArrayList<>();
     public List<TimedComponentFloatPoint> touchUpPoints = new ArrayList<>();
@@ -28,6 +29,7 @@ public class ItemData {
         this.sessionData = sessionData;
         this.item_index = item_index;
         this.date = NamesManager.getDate();
+        this.item = DataProvider.getInstance().getItemsProvider().getNormalized(item_index);
     }
 
     public void addTouchDownPoint(TimedComponentFloatPoint point) {
@@ -44,10 +46,6 @@ public class ItemData {
 
     public void setSampledPoints(List<List<FloatPoint>> points) {
         sampledPoints = new ArrayList<>(points);
-    }
-
-    public ItemData getNextWordData() {
-        return new ItemData(sessionData, item_index + 1);
     }
 
     @Override
