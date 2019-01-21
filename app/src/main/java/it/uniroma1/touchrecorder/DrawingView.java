@@ -321,44 +321,31 @@ public class DrawingView extends View {
     }
 
 
-    public List<List<FloatPoint>> extractSampling()
+    public List<FloatPoint> extractSampling()
     {
-        List<List<FloatPoint>> path_points = new ArrayList<>();
+        List<FloatPoint> path_points = new ArrayList<>();
 
         PathMeasure pm = new PathMeasure(permanentLinePath, false);
         float[] coordinates = new float[2];
 
         int connected_component = 0;
         while (pm.nextContour()) {
-            ArrayList<FloatPoint> points = new ArrayList<>();
-
             for (float i = 0; i <= pm.getLength(); i = i + SAMPLING_RATE) {
                 pm.getPosTan(i, coordinates, null);
-                points.add(new ComponentFloatPoint(connected_component, coordinates[0], coordinates[1]));
+                path_points.add(new ComponentFloatPoint(connected_component, coordinates[0], coordinates[1]));
             }
-            path_points.add(points);
 
             connected_component +=1 ;
         }
-
-//        int c = 0;
-//        for (List<FloatPoint> l : path_points)
-//        {
-//            Log.i(String.format("COMPONENT %d", c), l + "");
-//            c+=1;
-//        }
-
         return path_points;
     }
 
 
-    public void drawExtractSampling(List<List<FloatPoint>> path_points)
+    public void drawExtractSampling(List<FloatPoint> path_points)
     {
         sampledCirclePath.rewind();
-        for (List<FloatPoint> a : path_points) {
-            for (FloatPoint p : a) {
+        for (FloatPoint p : path_points) {
                 sampledCirclePath.addCircle(p.x, p.y, RADIUS_SAMPLED, CIRCLE_DIRECTION);
-            }
         }
         invalidate();
     }

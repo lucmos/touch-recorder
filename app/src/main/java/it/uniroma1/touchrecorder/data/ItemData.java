@@ -23,7 +23,7 @@ public class ItemData {
     public List<TimedComponentFloatPoint> touch_down_points = new ArrayList<>();
     public List<TimedComponentFloatPoint> touch_up_points = new ArrayList<>();
     public List<TimedComponentFloatPoint> movement_points = new ArrayList<>();
-    public ArrayList<List<FloatPoint>> sampled_points;
+    public List<FloatPoint> sampled_points;
 
     public ItemData(SessionData session_data, int item_index) {
         this.session_data = session_data;
@@ -44,7 +44,7 @@ public class ItemData {
         movement_points.add(point);
     }
 
-    public void setSampledPoints(List<List<FloatPoint>> points) {
+    public void setSampledPoints(List<FloatPoint> points) {
         sampled_points = new ArrayList<>(points);
     }
 
