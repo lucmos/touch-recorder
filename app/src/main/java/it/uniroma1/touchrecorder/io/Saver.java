@@ -19,7 +19,7 @@ import it.uniroma1.touchrecorder.data.ItemData;
 public class Saver {
 
     public static File saveItemData(final ItemData itemData, String timestamp) {
-        File p = NamesManager.sessionDirectory(itemData.sessionData, itemData.item_index, timestamp);
+        File p = NamesManager.sessionDirectory(itemData.session_data, itemData.item_index, timestamp);
         final String name = NamesManager.getJsonName(itemData);
         final File path = new File(p, name);
 

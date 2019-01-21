@@ -69,13 +69,13 @@ public class DrawingActivity extends Activity {
 
         TextView totalNumberView = findViewById(R.id.total_number_label);
         totalNumberView.setText(String.valueOf(DataProvider.getInstance()
-                .getItemsProvider().getNumberOfItems()));
+                .getItems_provider().getNumberOfItems()));
 
         TextView title = findViewById(R.id.title_label);
         title.setText(DataProvider.getInstance().getTitle());
 
         TextView itemText = findViewById(R.id.item_text);
-        itemText.setText(DataProvider.getInstance().getItemsProvider().get(item_index));
+        itemText.setText(DataProvider.getInstance().getItems_provider().get(item_index));
     }
 
     public void setTimerTextView(String s) {
@@ -99,7 +99,7 @@ public class DrawingActivity extends Activity {
         DrawingView drawView = (DrawingView) findViewById(R.id.drawing_view_id);
         final ItemData data = drawView.getItemData();
 
-        if (data.touchUpPoints.isEmpty()) {
+        if (data.touch_up_points.isEmpty()) {
             ToastManager.getInstance().toastNoWord(this);
 
             view.setEnabled(true);
@@ -108,7 +108,7 @@ public class DrawingActivity extends Activity {
         ToastManager.getInstance().resetNoWord();
 
 
-        Saver.takeScreenshot(this, NamesManager.sessionDirectory(data.sessionData, data.item_index, timestamp), NamesManager.getScreenshotName(data));
+        Saver.takeScreenshot(this, NamesManager.sessionDirectory(data.session_data, data.item_index, timestamp), NamesManager.getScreenshotName(data));
 
         thread = new Thread() {
             @Override
@@ -120,8 +120,8 @@ public class DrawingActivity extends Activity {
         };
         thread.start();
 
-        int next_index = DataProvider.getInstance().getItemsProvider().nextIndex(data.item_index);
-        int total_number_items = DataProvider.getInstance().getItemsProvider().getNumberOfItems();
+        int next_index = DataProvider.getInstance().getItems_provider().nextIndex(data.item_index);
+        int total_number_items = DataProvider.getInstance().getItems_provider().getNumberOfItems();
         if (next_index >= total_number_items) {
             Toast.makeText(this, "Session completed! Thank you!", Toast.LENGTH_SHORT).show();
             finish();
@@ -130,7 +130,7 @@ public class DrawingActivity extends Activity {
 
         ToastManager.getInstance().toastSavedWord(this);
 
-        String sessionData = new Gson().toJson(data.sessionData);
+        String sessionData = new Gson().toJson(data.session_data);
         Intent intent = new Intent(this, DrawingActivity.class);
         Bundle b = new Bundle();
         b.putString(SESSION_KEY, sessionData);

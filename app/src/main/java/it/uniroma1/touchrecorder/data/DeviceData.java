@@ -8,20 +8,20 @@ import com.google.gson.GsonBuilder;
 
 public class DeviceData {
 
-    public String deviceModel;
-    public String deviceFingerPrint;
-    public int widthPixels;
-    public int heigthPixels;
+    public String device_model;
+    public String device_finger_print;
+    public int width_pixels;
+    public int heigth_pixels;
     public float xdpi;
     public float ydpi;
 
-    public DeviceData(String DeviceModel, String DeviceFingerPrint, int widthPixels, int heigthPixels,
+    public DeviceData(String DeviceModel, String DeviceFingerPrint, int width_pixels, int heigth_pixels,
                       float xdpi, float ydpi)
     {
-        deviceModel = DeviceModel;
-        deviceFingerPrint = DeviceFingerPrint;
-        this.widthPixels = widthPixels;
-        this.heigthPixels = heigthPixels;
+        device_model = DeviceModel;
+        device_finger_print = DeviceFingerPrint;
+        this.width_pixels = width_pixels;
+        this.heigth_pixels = heigth_pixels;
         this.xdpi = xdpi;
         this.ydpi = ydpi;
     }

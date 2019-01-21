@@ -47,9 +47,9 @@ public class NamesManager {
 
     public static String getFileName(ItemData data, String extesion) {
         return String.format(Locale.getDefault(), "%s%s%s%s%s%s%s.%s",
-                DataProvider.getInstance().getItemsProvider().getNormalized(data.item_index), SEPARATOR,
-                data.sessionData.name, SEPARATOR,
-                data.sessionData.surname, SEPARATOR,
+                DataProvider.getInstance().getItems_provider().getNormalized(data.item_index), SEPARATOR,
+                data.session_data.name, SEPARATOR,
+                data.session_data.surname, SEPARATOR,
                 data.item_index, extesion);
     }
 
@@ -71,7 +71,7 @@ public class NamesManager {
     {
         File base = baseDirectory();
 
-        String firstFolder = DataProvider.getInstance().getItemsProvider().getNormalized(item_index);
+        String firstFolder = DataProvider.getInstance().getItems_provider().getNormalized(item_index);
         String secondFolder = normalize(data.name) + SEPARATOR +
                 normalize(data.surname) + SEPARATOR + timestamp;
         File sessionDirectory = new File(new File(base, firstFolder), secondFolder);

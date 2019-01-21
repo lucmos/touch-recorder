@@ -1,12 +1,10 @@
 package it.uniroma1.touchrecorder.data;
 
-import java.util.ArrayList;
-
 import it.uniroma1.touchrecorder.io.NamesManager;
 
 public class DataProvider  {
     private  Configuration configuration;
-    private ItemsProvider itemsProvider;
+    private ItemsProvider items_provider;
 
     private static DataProvider instance;
     public static DataProvider getInstance() {
@@ -25,11 +23,11 @@ public class DataProvider  {
 
     private DataProvider(Configuration configuration) {
         this.configuration = configuration;
-        this.itemsProvider = new ItemsProvider();
+        this.items_provider = new ItemsProvider();
     }
 
-    public ItemsProvider getItemsProvider() {
-        return itemsProvider;
+    public ItemsProvider getItems_provider() {
+        return items_provider;
     }
 
     public String getRepetitionsLabel() {

@@ -432,8 +432,8 @@ public class DrawingView extends View {
 
     public void setItemData(ItemData data) {
         itemData = data;
-        sessionData = data.sessionData;
-        deviceData = sessionData.deviceData;
+        sessionData = data.session_data;
+        deviceData = sessionData.device_data;
     }
 
     public void finish()

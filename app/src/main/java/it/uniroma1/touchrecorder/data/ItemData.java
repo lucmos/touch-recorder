@@ -15,37 +15,37 @@ public class ItemData {
 
 
     public final String date;
-    public SessionData sessionData;
+    public SessionData session_data;
 
     public int item_index;
     public String item;
 
-    public List<TimedComponentFloatPoint> touchDownPoints = new ArrayList<>();
-    public List<TimedComponentFloatPoint> touchUpPoints = new ArrayList<>();
-    public List<TimedComponentFloatPoint> movementPoints = new ArrayList<>();
-    public ArrayList<List<FloatPoint>> sampledPoints;
+    public List<TimedComponentFloatPoint> touch_down_points = new ArrayList<>();
+    public List<TimedComponentFloatPoint> touch_up_points = new ArrayList<>();
+    public List<TimedComponentFloatPoint> movement_points = new ArrayList<>();
+    public ArrayList<List<FloatPoint>> sampled_points;
 
-    public ItemData(SessionData sessionData, int item_index) {
-        this.sessionData = sessionData;
+    public ItemData(SessionData session_data, int item_index) {
+        this.session_data = session_data;
         this.item_index = item_index;
         this.date = NamesManager.getDate();
-        this.item = DataProvider.getInstance().getItemsProvider().getNormalized(item_index);
+        this.item = DataProvider.getInstance().getItems_provider().getNormalized(item_index);
     }
 
     public void addTouchDownPoint(TimedComponentFloatPoint point) {
-        touchDownPoints.add(point);
+        touch_down_points.add(point);
     }
 
     public void addTouchUpPoint(TimedComponentFloatPoint point) {
-        touchUpPoints.add(point);
+        touch_up_points.add(point);
     }
 
     public void addMovementPoint(TimedComponentFloatPoint point) {
-        movementPoints.add(point);
+        movement_points.add(point);
     }
 
     public void setSampledPoints(List<List<FloatPoint>> points) {
-        sampledPoints = new ArrayList<>(points);
+        sampled_points = new ArrayList<>(points);
     }
 
     @Override
