@@ -3,6 +3,7 @@ package it.uniroma1.touchrecorder;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +29,6 @@ public class DrawingActivity extends Activity {
     public static final String ITEM_NUMBER_KEY = "word_number_key";
     public static final String TIMESTAMP_KEY = "timestamp_key";
 
-    private String timestamp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,6 @@ public class DrawingActivity extends Activity {
         if (b != null) {
             session = b.getString(SESSION_KEY);
             item_index = b.getInt(ITEM_NUMBER_KEY);
-            timestamp = b.getString(TIMESTAMP_KEY);
             sessionData = new Gson().fromJson(session, SessionData.class);
         }
 
@@ -75,6 +74,11 @@ public class DrawingActivity extends Activity {
         title.setText(DataProvider.getInstance().getTitle());
 
         TextView itemText = findViewById(R.id.item_text);
+        if (itemText == null)
+        {
+            Toast.makeText(this, "ERROR: There is a null class in the json!", Toast.LENGTH_SHORT).show();
+            throw new RuntimeException("There is a null class in the json!");
+        }
         itemText.setText(DataProvider.getInstance().getItems_provider().get(item_index));
     }
 
@@ -97,9 +101,9 @@ public class DrawingActivity extends Activity {
         view.setEnabled(false);
 
         DrawingView drawView = (DrawingView) findViewById(R.id.drawing_view_id);
-        final ItemData data = drawView.getItemData();
+        final ItemData item_data = drawView.getItemData();
 
-        if (data.touch_up_points.isEmpty()) {
+        if (item_data.touch_up_points.isEmpty()) {
             ToastManager.getInstance().toastNoWord(this);
 
             view.setEnabled(true);
@@ -107,20 +111,19 @@ public class DrawingActivity extends Activity {
         }
         ToastManager.getInstance().resetNoWord();
 
-
-        Saver.takeScreenshot(this, NamesManager.sessionDirectory(data.session_data, data.item_index, timestamp), NamesManager.getScreenshotName(data));
+        Saver.takeScreenshot(this, NamesManager.sessionDirectory(item_data.session_data, item_data.item_index, item_data.session_data.date), NamesManager.getScreenshotName(item_data));
 
         thread = new Thread() {
             @Override
             public void run() {
                 synchronized (DrawingActivity.this) {
-                    path_file = Saver.saveItemData(data, timestamp);
+                    path_file = Saver.saveItemData(item_data, item_data.session_data.date);
                 }
             }
         };
         thread.start();
 
-        int next_index = DataProvider.getInstance().getItems_provider().nextIndex(data.item_index);
+        int next_index = DataProvider.getInstance().getItems_provider().nextIndex(item_data.item_index);
         int total_number_items = DataProvider.getInstance().getItems_provider().getNumberOfItems();
         if (next_index >= total_number_items) {
             Toast.makeText(this, "Session completed! Thank you!", Toast.LENGTH_SHORT).show();
@@ -130,12 +133,11 @@ public class DrawingActivity extends Activity {
 
         ToastManager.getInstance().toastSavedWord(this);
 
-        String sessionData = new Gson().toJson(data.session_data);
+        String sessionData = new Gson().toJson(item_data.session_data);
         Intent intent = new Intent(this, DrawingActivity.class);
         Bundle b = new Bundle();
         b.putString(SESSION_KEY, sessionData);
         b.putInt(ITEM_NUMBER_KEY, next_index); //Your id
-        b.putString(TIMESTAMP_KEY, timestamp);
 
         intent.putExtras(b); //Put your id to your next Intent
         startActivity(intent);
@@ -152,7 +154,7 @@ public class DrawingActivity extends Activity {
         if (thread != null) {
             try {
                 thread.join();
-                NamesManager.getInstance().scanFile(this, path_file);
+                NamesManager.scanFile(this, path_file);
                 ToastManager.getInstance().resetSaveWord();
             } catch (InterruptedException e) {
                 e.printStackTrace();
