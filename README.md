@@ -34,7 +34,7 @@ It is possible to configure the behaviour of the application through a configura
   "items": [
     "item1",
     "item2",
-    ...
+    "item3",
   ],
   "repetitions": 5,
   "repetitions_label": "Repetitions",
